@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>T and P Calculation</title>
+  <title>T and P Calculator</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -12,9 +12,10 @@
     }
     input {
       padding: 10px;
-      margin: 5px;
+      margin: 5px 0;
       border: 1px solid #ccc;
       border-radius: 4px;
+      width: 200px;
     }
     button {
       padding: 10px 20px;
@@ -37,22 +38,9 @@
 <body>
   <h1>T and P Calculator</h1>
   <form id="calculator-form">
-    <label for="year1">Year Digit 1:</label>
-    <input type="number" id="year1" required>
-    <label for="year2">Year Digit 2:</label>
-    <input type="number" id="year2" required>
-    <label for="year3">Year Digit 3:</label>
-    <input type="number" id="year3" required>
-    <label for="year4">Year Digit 4:</label>
-    <input type="number" id="year4" required>
-    <label for="month1">Month Digit 1:</label>
-    <input type="number" id="month1" required>
-    <label for="month2">Month Digit 2:</label>
-    <input type="number" id="month2" required>
-    <label for="day1">Day Digit 1:</label>
-    <input type="number" id="day1" required>
-    <label for="day2">Day Digit 2:</label>
-    <input type="number" id="day2" required>
+    <label for="birthdate">Enter Birthdate (YYYYMMDD):</label><br>
+    <input type="text" id="birthdate" maxlength="8" required placeholder="e.g., 19900721">
+    <br>
     <button type="submit">Calculate</button>
   </form>
   <div class="result" id="result"></div>
@@ -61,13 +49,23 @@
     document.getElementById('calculator-form').addEventListener('submit', function(e) {
       e.preventDefault();
 
-      // Get input values
-      const year = [1, 2, 3, 4].map(n => parseInt(document.getElementById(`year${n}`).value) || 0);
-      const month = [1, 2].map(n => parseInt(document.getElementById(`month${n}`).value) || 0);
-      const day = [1, 2].map(n => parseInt(document.getElementById(`day${n}`).value) || 0);
+      // Get input value
+      const birthdate = document.getElementById('birthdate').value;
+
+      // Validate input length
+      if (birthdate.length !== 8 || isNaN(birthdate)) {
+        document.getElementById('result').textContent = "Please enter a valid 8-digit date (YYYYMMDD).";
+        return;
+      }
+
+      // Extract digits
+      const digits = birthdate.split('').map(Number);
+      const year = digits.slice(0, 4); // Year digits
+      const month = digits.slice(4, 6); // Month digits
+      const day = digits.slice(6, 8); // Day digits
 
       // Calculate T
-      const sumAll = [...year, ...month, ...day].reduce((a, b) => a + b, 0);
+      const sumAll = digits.reduce((a, b) => a + b, 0);
       const T = sumAll === 0 ? 0 : 1 + ((sumAll - 1) % 9);
 
       // Calculate P
