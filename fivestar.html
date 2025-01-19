@@ -1,21 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>T and P Calculator</title>
+  <title>五星計算機</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 20px;
-      background-color: #f4f4f9;
+      background-color: #f9f9f9;
+      line-height: 1.6;
+    }
+    h1 {
+      color: #333;
     }
     input {
       padding: 10px;
       margin: 5px 0;
       border: 1px solid #ccc;
       border-radius: 4px;
-      width: 200px;
+      width: 250px;
     }
     button {
       padding: 10px 20px;
@@ -33,15 +37,22 @@
       font-size: 1.2em;
       color: #333;
     }
+    .notice {
+      color: #555;
+      font-size: 0.9em;
+      margin-bottom: 10px;
+    }
   </style>
 </head>
 <body>
-  <h1>T and P Calculator</h1>
+  <h1>五星計算機</h1>
+  <p class="notice">請輸入您的出生年月日（共 8 位數字，格式：西元年 + 月 + 日，例如：19900721）。</p>
+  
   <form id="calculator-form">
-    <label for="birthdate">Enter Birthdate (YYYYMMDD):</label><br>
-    <input type="text" id="birthdate" maxlength="8" required placeholder="e.g., 19900721">
+    <label for="birthdate">出生年月日：</label><br>
+    <input type="text" id="birthdate" maxlength="8" required placeholder="例如：19900721">
     <br>
-    <button type="submit">Calculate</button>
+    <button type="submit">計算</button>
   </form>
   <div class="result" id="result"></div>
 
@@ -49,31 +60,31 @@
     document.getElementById('calculator-form').addEventListener('submit', function(e) {
       e.preventDefault();
 
-      // Get input value
+      // 取得輸入值
       const birthdate = document.getElementById('birthdate').value;
 
-      // Validate input length
+      // 驗證輸入格式
       if (birthdate.length !== 8 || isNaN(birthdate)) {
-        document.getElementById('result').textContent = "Please enter a valid 8-digit date (YYYYMMDD).";
+        document.getElementById('result').textContent = "請輸入正確的 8 位數字（西元年 + 月 + 日，例如：19900721）。";
         return;
       }
 
-      // Extract digits
+      // 將輸入分解為數字陣列
       const digits = birthdate.split('').map(Number);
-      const year = digits.slice(0, 4); // Year digits
-      const month = digits.slice(4, 6); // Month digits
-      const day = digits.slice(6, 8); // Day digits
+      const year = digits.slice(0, 4); // 年份部分
+      const month = digits.slice(4, 6); // 月份部分
+      const day = digits.slice(6, 8); // 日期部分
 
-      // Calculate T
+      // 計算 T
       const sumAll = digits.reduce((a, b) => a + b, 0);
       const T = sumAll === 0 ? 0 : 1 + ((sumAll - 1) % 9);
 
-      // Calculate P
+      // 計算 P
       const sumLastFour = [...month, ...day].reduce((a, b) => a + b, 0);
       const P = sumLastFour === 10 ? 10 : 1 + ((sumLastFour - 1) % 9);
 
-      // Display results
-      document.getElementById('result').textContent = `T = ${T}, P = ${P}`;
+      // 顯示結果
+      document.getElementById('result').textContent = `計算結果：T = ${T}, P = ${P}`;
     });
   </script>
 </body>
