@@ -71,17 +71,32 @@
 
       // 將輸入分解為數字陣列
       const digits = birthdate.split('').map(Number);
-      const year = digits.slice(0, 4); // 年份部分
-      const month = digits.slice(4, 6); // 月份部分
-      const day = digits.slice(6, 8); // 日期部分
+
+      // 計算年、月、日的總和
+      const sumAll = digits.reduce((a, b) => a + b, 0);
 
       // 計算 T
-      const sumAll = digits.reduce((a, b) => a + b, 0);
-      const T = sumAll === 0 ? 0 : 1 + ((sumAll - 1) % 9);
+      let T = sumAll;
+      if (T === 10) {
+        T = 10;  // 如果總和為 10，顯示 10
+      } else {
+        // 總和不為 10 時，將每一位數相加直到只剩一位數
+        while (T >= 10) {
+          T = String(T).split('').map(Number).reduce((a, b) => a + b, 0);
+        }
+      }
 
-      // 計算 P
-      const sumLastFour = [...month, ...day].reduce((a, b) => a + b, 0);
-      const P = sumLastFour === 10 ? 10 : 1 + ((sumLastFour - 1) % 9);
+      // 計算 P（月 + 日的數字加總）
+      const sumMonthAndDay = digits.slice(4, 6).concat(digits.slice(6, 8)).reduce((a, b) => a + b, 0);
+      let P = sumMonthAndDay;
+      if (P === 10) {
+        P = 10;  // 如果總和為 10，顯示 10
+      } else {
+        // 總和不為 10 時，將每一位數相加直到只剩一位數
+        while (P >= 10) {
+          P = String(P).split('').map(Number).reduce((a, b) => a + b, 0);
+        }
+      }
 
       // 顯示結果
       document.getElementById('result').textContent = `計算結果：T = ${T}, P = ${P}`;
